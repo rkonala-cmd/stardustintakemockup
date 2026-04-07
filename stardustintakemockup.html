@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Stardust: Intake Form Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Google Sans', 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom scrollbar for multi-select boxes */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen relative">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col items-end pointer-events-none"></div>
+
+    <nav class="sticky top-0 w-full z-50 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">💫</span>
+                    <span class="font-bold text-xl text-indigo-900">Project Stardust</span>
+                    <span class="ml-4 text-sm font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded hidden sm:inline-block">Intake Form Mockup</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        
+        <!-- ========================================== -->
+        <!-- INTRO SECTION                              -->
+        <!-- ========================================== -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 overflow-hidden">
+            <div class="p-8 md:p-10 border-b border-slate-100 bg-slate-50">
+            <h1 class="text-3xl font-extrabold text-slate-900 mb-4">Service Delivery Intake Form</h1>
+            <p class="text-lg text-slate-700 max-w-4xl leading-relaxed">
+                Welcome to the Service Delivery (SD) Intake Form. This form serves as the centralized starting point for all SD requests, including new workflow launches, change requests, and operational support. This is an opportunity for your team to lay out your primary operational challenges, required business outcomes, and alignment with OKRs. The information provided will then be processed by SD to help determine the appropriate solution from our Menu of Services. Once your team submits this request, a member of the SD team will reach out directly with next steps.
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FORM GRID                                  -->
+    <!-- ========================================== -->
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="w-full">
+            
+            <!-- Progress Indicator -->
+            <div class="mb-6 flex items-center justify-between text-sm font-medium text-slate-500">
+                <span id="step-indicator">Step 1: Intake Qualifiers</span>
+                <span id="step-counter">1 / 2</span>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-visible">
+                
+                <!-- SECTION 0: INTAKE QUALIFIERS -->
+                <div id="section-0" class="p-8 fade-in">
+
+                    <!-- AI Quick Start -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 mb-8 border border-indigo-100 shadow-sm">
+                        <h3 class="text-indigo-900 font-bold mb-2 flex items-center text-lg">
+                            <span class="mr-2">✨</span> AI Quick Start (Optional)
+                        </h3>
+                        <p class="text-sm text-indigo-800 mb-4">Paste an email, project brief, or rough notes. Our AI will analyze it and pre-fill the intake qualifiers for you to save time.</p>
+                        <textarea id="ai_brief" class="w-full p-3 rounded-lg border border-indigo-200 mb-3 focus:ring-2 focus:ring-indigo-500 outline-none" rows="3" placeholder="e.g., We need to launch a new queue for YouTube Shorts appeals because volumes are spiking ahead of the election. Executive mandate to get this done by Q3."></textarea>
+                        <div class="flex items-center">
+                            <button id="btn_ai_autofill" onclick="autoFillForm()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg shadow font-medium flex items-center transition">
+                                <span class="mr-2">✨</span> Analyze & Pre-fill Form
+                            </button>
+                            <div id="ai_loading" class="hidden text-indigo-600 text-sm ml-4 font-semibold animate-pulse flex items-center">
+                                <span class="animate-spin mr-2">⏳</span> Processing with Gemini...
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Q0.0 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">0.0 Email *</label>
+                            <input type="email" id="q0_0" class="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors" placeholder="name@company.com" oninput="showError('q0_0', false)">
+                        </div>
+
+                        <!-- Q0.1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">0.1 What PA is this launch tied to? *</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q0_1_dropdown')" id="q0_1_btn" class="w-full bg-white border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q0_1_btn_text" class="text-slate-500 text-sm">Select a PA...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <input type="hidden" id="q0_1_val" value="">
+                                <div id="q0_1_dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-1 space-y-1 custom-dropdown-menu">
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Search', 'Search')">Search</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'YouTube', 'YouTube')">YouTube</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Cloud', 'Cloud')">Cloud</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Ads', 'Ads')">Ads</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Shopping', 'Shopping')">Shopping</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Payment', 'Payment')">Payment</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Child Safety', 'Child Safety')">Child Safety</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q0_1', 'Play', 'Play')">Play</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q0.2 CRITICAL ROUTING -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">0.2 Is this a new launch or a change to an existing workflow/sub-workflow/queue? *</label>
+                            <div id="q0_2_container" class="space-y-2 py-1 rounded border border-transparent transition-colors">
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="q0_2" value="new" class="form-radio h-4 w-4 text-indigo-600" onchange="handleRoutingChange()">
+                                    <span class="text-slate-700 font-medium">New Launch Request</span>
+                                </label>
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="radio" name="q0_2" value="change" class="form-radio h-4 w-4 text-indigo-600" onchange="handleRoutingChange()">
+                                    <span class="text-slate-700 font-medium">Existing Launch Change Request</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Q0.3a Category Selection -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">0.3a What problem category does your challenge fall under? * (Select all that apply)</label>
+                            <div id="q0_3a_wrapper" class="relative custom-dropdown-container opacity-50 pointer-events-none transition-opacity">
+                                <div class="absolute inset-0 z-30" id="q0_3a_overlay" title="Please select an option in 0.2 first"></div>
+                                <button type="button" onclick="toggleDropdown('q0_3a_dropdown')" id="q0_3a_btn" class="w-full bg-slate-50 border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q0_3a_btn_text" class="text-slate-500 text-sm">Select a request type in 0.2 first...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <div id="q0_3a_dropdown" class="hidden absolute z-20 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-2 space-y-1 custom-dropdown-menu">
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q0_3a_checkbox" value="cat1" onchange="updateQ03aSelection()">
+                                        <span class="text-sm font-medium text-slate-700"><strong>1.</strong> Volume, Capacity & Workforce Shifts</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q0_3a_checkbox" value="cat2" onchange="updateQ03aSelection()">
+                                        <span class="text-sm font-medium text-slate-700"><strong>2.</strong> Policy, Process & Guidelines Updates</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q0_3a_checkbox" value="cat3" onchange="updateQ03aSelection()">
+                                        <span class="text-sm font-medium text-slate-700"><strong>3.</strong> Tooling, Infrastructure & Workflow Structure</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q0_3a_checkbox" value="cat4" onchange="updateQ03aSelection()">
+                                        <span class="text-sm font-medium text-slate-700"><strong>4.</strong> Quality, Training & Performance Optimization</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer last:border-0">
+                                        <input type="checkbox" class="q0_3a_checkbox" value="cat5" onchange="updateQ03aSelection()">
+                                        <span class="text-sm font-medium text-slate-700"><strong>5.</strong> Commercial, Administrative & Access Blockers</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q0.3b Specific Problem Statements (Conditional) -->
+                        <div id="q0_3b_wrapper" class="hidden fade-in">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">0.3b What specific problem statement is the request solving for? * (Select all that apply)</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q0_3b_dropdown')" id="q0_3b_btn" class="w-full bg-white border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q0_3b_btn_text" class="text-slate-500 text-sm">Select problem statements...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <div id="q0_3b_dropdown" class="hidden absolute z-20 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-80 overflow-y-auto p-2 space-y-1 custom-dropdown-menu">
+                                    
+                                    <!-- Cat 1 -->
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Scaling Enforcement</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We cannot keep up with the volume of reviewing bad content, fake accounts, or fraud.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Temporary Volume Spikes</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We have a huge wave of volume coming up and need extra surge support.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Missing Language Skills</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to process work in a specific language our team does not speak.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Lack of Project Managers</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We have a major initiative to drive but no dedicated project managers.</span></div>
+                                    </label>
+                                    
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Unexpected Volume Shifts</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are changing our routing which will drastically increase or decrease incoming queue volumes.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Headcount Adjustments</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to increase or decrease the number of reviewers for an existing workflow.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat1" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Routine Operational Shifts</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to hire more people, move headcount, approve overtime, or change vendor schedules.</span></div>
+                                    </label>
+
+                                    <!-- Cat 2 -->
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Managing User Appeals</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Users are challenging previous decisions and we need a formal review process.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Navigating Complex Policies</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are dealing with tricky, ambiguous cases and need external experts.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">New Program Ambiguity</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are launching a new program but do not know how to scope or plan the operational details.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Need for Specialized Research</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are dealing with a specific topic and need custom research or benchmarking.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Operational Strategy Changes</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to rethink where our vendors are located.</span></div>
+                                    </label>
+                                    
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Policy Updates</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are launching a change or clarification to an existing policy that will impact how agents review.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat2" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Process Guideline Shifts</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are changing the step-by-step workflow instructions that reviewers follow.</span></div>
+                                    </label>
+
+                                    <!-- Cat 3 -->
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Manual Workflow Bottlenecks</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Reviewers are doing too much manual work and we need automated tools or autoraters.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Missing Technical Infrastructure</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We lack the digital tools, custom dashboards, or data pipelines needed.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">AI Model Training Gaps</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Our models are not accurate enough, and we need people to label data or write prompts.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Unknown Platform Threats</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need teams to run adversarial tests or "red team" our models to find hidden risks.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Need for Model Testing</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need highly skilled "expert" raters to review examples so we can test a future policy.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Blind Spots in Data</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We do not have the right dashboard numbers, headcount math, or SLA metrics.</span></div>
+                                    </label>
+                                    
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Queue Structure Reorganization</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to split, merge, or restructure our existing workflows and sub-workflows.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Tooling Updates</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are launching or updating a review tool and need to ensure agents are trained on the new interface.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat3" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Metadata Adjustments</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to modify the underlying tracking data or tags attached to an existing queue.</span></div>
+                                    </label>
+
+                                    <!-- Cat 4 -->
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat4" data-show="new">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Missing Training for a Launch</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are launching something new and do not have the training materials ready.</span></div>
+                                    </label>
+                                    
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat4" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Quality & Performance Drops</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Reviewers are making mistakes and we do not have a good framework to measure quality.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat4" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Inconsistent Decision Making</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Different reviewers are making different decisions on the exact same content, and we need an analysis to find out why.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat4" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Outdated Training Materials</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Our rules have changed, and the old training materials need to be updated.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat4" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Targeted Training & Quality Support</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We do not need a workflow change, just help retraining agents or running a quality deep-dive.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat4" data-show="change">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Target & SLA Adjustments</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are changing the speed or quality metrics that reviewers are expected to hit.</span></div>
+                                    </label>
+
+                                    <!-- Cat 5 -->
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Contract & Policy Blockers</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are stuck because we need a new vendor contract, need to change an old one, or need an exception.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Payment & Budget Delays</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Our operations are blocked because purchase orders, invoices, or budget approvals are delayed.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Workflow Risk Unknowns</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We are not sure if this work is too sensitive or risky for our current vendors to handle safely.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Broken System Access</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Our vendors cannot do their jobs because they are locked out of the tools they need.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Poor Vendor Performance</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Our current vendor is not doing a good job or caused an incident, and we need help running a formal review.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Communication Gaps with Vendors</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">We need to urgently send a formal message to our vendors about a process or policy change.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Knowledge Base Lockouts</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">People who need to see our training materials do not have the right permissions.</span></div>
+                                    </label>
+                                    <label class="hidden space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer last:border-0 q0_3b_item" data-cat="cat5" data-show="both">
+                                        <input type="checkbox" id="q0_3_other_checkbox" class="mt-1 q0_3b_checkbox" onchange="updateQ03bSelection()">
+                                        <div class="flex flex-col"><span class="text-sm font-bold text-slate-800">Other</span><span class="text-xs text-slate-500 mt-0.5 leading-tight">Select to manually type a primary challenge not listed above.</span></div>
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q0.3c Additional Details (formerly 0.3a) -->
+                        <div id="q0_3c_container" class="hidden pl-4 border-l-2 border-indigo-300 fade-in">
+                            <div class="flex justify-between items-end mb-1">
+                                <label class="block text-sm font-semibold text-slate-700">0.3c Please provide additional details explaining the primary challenge: *</label>
+                                <button id="btn_polish_q0_3c" onclick="polishText('q0_3c')" type="button" class="text-xs text-indigo-700 hover:text-indigo-900 hover:bg-indigo-100 font-bold flex items-center bg-indigo-50 px-2 py-1 rounded transition">✨ Polish</button>
+                            </div>
+                            <textarea id="q0_3c" class="w-full p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" rows="2" oninput="showError('q0_3c', false)"></textarea>
+                        </div>
+
+                        <!-- Q0.4 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">0.4 Do any of the following apply to your request? *</label>
+                            <div id="q0_4_container" class="space-y-2 py-1 rounded border border-transparent transition-colors">
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-1 text-rose-500" id="q0_4_reg" onchange="updateUrgency()"><span class="text-sm text-slate-800">Regulatory, Legal, or Compliance Deadline</span></label>
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-1 text-rose-500" id="q0_4_risk" onchange="updateUrgency()"><span class="text-sm text-slate-800">Active Risk/Harm Mitigation</span></label>
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-1 text-rose-500" id="q0_4_exec" onchange="updateUrgency()"><span class="text-sm text-slate-800">Executive-Mandated Launch (Code Red)</span></label>
+                                <label class="flex items-start space-x-2"><input type="checkbox" class="mt-1" id="q0_4_none" onchange="updateUrgency(true)"><span class="text-sm text-slate-600 font-medium">None / Unsure</span></label>
+                            </div>
+                        </div>
+
+                        <!-- Q0.4a (Conditional) -->
+                        <div id="q0_4a_container" class="hidden pl-4 border-l-2 border-rose-400 fade-in bg-rose-50 p-3 rounded">
+                            <div class="flex justify-between items-end mb-1">
+                                <div>
+                                    <label class="block text-sm font-bold text-rose-800">0.4a Please provide additional details justifying your selection above: *</label>
+                                    <p class="text-xs text-rose-600">Include requested launch date and impact of delay.</p>
+                                </div>
+                                <button id="btn_polish_q0_4a" onclick="polishText('q0_4a')" type="button" class="text-xs text-indigo-700 hover:text-indigo-900 hover:bg-indigo-100 font-bold flex items-center bg-indigo-50 px-2 py-1 rounded transition mb-1">✨ Polish</button>
+                            </div>
+                            <textarea id="q0_4a" class="w-full p-3 mt-1 border border-rose-300 rounded outline-none focus:ring-2 focus:ring-rose-500 transition-colors" rows="2" oninput="showError('q0_4a', false)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 1: NEW LAUNCH REQUESTS -->
+                <div id="section-1" class="hidden p-8 fade-in">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">New Launch Requests</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Q1.0 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.0 What is the primary intended business outcome for this new launch? *</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q1_0_dropdown')" id="q1_0_btn" class="w-full bg-white border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q1_0_btn_text" class="text-slate-500 text-sm">Select an outcome...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <input type="hidden" id="q1_0_val" value="">
+                                <div id="q1_0_dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-1 space-y-1 custom-dropdown-menu">
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'policy', 'Policy Enforcement & Compliance')">Policy Enforcement & Compliance</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'fraud', 'Fraud Reduction & Account Safety')">Fraud Reduction & Account Safety</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'ai', 'AI Model Performance & Alignment')">AI Model Performance & Alignment</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'risk', 'Proactive Risk & Threat Discovery')">Proactive Risk & Threat Discovery</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'appeals', 'User Appeals & Resolution')">User Appeals & Resolution</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'optimization', 'Workflow Optimization & Quality Improvement')">Workflow Optimization & Quality Improvement</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_0', 'other', 'Other / Unsure')">Other / Unsure</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q1.1 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">1.1 Which of the following types of risks are associated? * (Select all that apply)</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q1_1_dropdown')" id="q1_1_btn" class="w-full bg-white border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q1_1_btn_text" class="text-slate-500 text-sm">Select risks...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <div id="q1_1_dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-2 space-y-1 custom-dropdown-menu">
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q1_1_checkbox" onchange="updateQ11Selection()">
+                                        <span class="text-sm font-medium text-slate-700">Regulatory risk</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q1_1_checkbox" onchange="updateQ11Selection()">
+                                        <span class="text-sm font-medium text-slate-700">Reputational risk</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q1_1_checkbox" onchange="updateQ11Selection()">
+                                        <span class="text-sm font-medium text-slate-700">User safety risk</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q1_1_checkbox" onchange="updateQ11Selection()">
+                                        <span class="text-sm font-medium text-slate-700">Policy risk</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q1_1_checkbox" onchange="updateQ11Selection()">
+                                        <span class="text-sm font-medium text-slate-700">Operational risk</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                                        <input type="checkbox" class="q1_1_checkbox" onchange="updateQ11Selection()">
+                                        <span class="text-sm font-medium text-slate-700">Minimal to no risk associated</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q1.2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.2 What is the anticipated complexity of the request? *</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q1_2_dropdown')" id="q1_2_btn" class="w-full bg-slate-50 border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q1_2_btn_text" class="text-slate-500 text-sm">Select Complexity...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <input type="hidden" id="q1_2_val" value="">
+                                <div id="q1_2_dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-1 space-y-1 custom-dropdown-menu">
+                                    <div class="p-3 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_2', 'low', 'Low: Single tool, limited signals')">
+                                        <span class="font-bold block">Low</span> Single tool, limited signals
+                                    </div>
+                                    <div class="p-3 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_2', 'medium', 'Medium: Multiple tools, 2+ modalities')">
+                                        <span class="font-bold block">Medium</span> Multiple tools, 2+ modalities
+                                    </div>
+                                    <div class="p-3 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_2', 'high', 'High: Synthesizes multiple signals, highly specialized')">
+                                        <span class="font-bold block">High</span> Synthesizes multiple signals, highly specialized
+                                    </div>
+                                    <div class="p-3 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_2', 'unsure', 'Unsure')">
+                                        <span class="font-bold block">Unsure</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q1.3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.3 Do you have an idea of what type of additional support this launch might need? *</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q1_3_dropdown')" id="q1_3_btn" class="w-full bg-white border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q1_3_btn_text" class="text-slate-500 text-sm">Select support type...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <input type="hidden" id="q1_3_val" value="">
+                                <div id="q1_3_dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-1 space-y-1 custom-dropdown-menu">
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'Training', 'Training')">Training</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'PWG', 'PWG')">PWG</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'Tools', 'Tools')">Tools</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'Communication', 'Communication and Announcement')">Communication and Announcement</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'Scaled', 'Scaled Knowledge')">Scaled Knowledge</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'BMHD', 'BMHD Metadata Onboarding')">BMHD Metadata Onboarding</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_3', 'None', 'None / Unsure')">None / Unsure</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q1.4 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.4 Do you foresee this being a one-time need or an ongoing need that we will need to continue to scale? *</label>
+                            <div class="relative custom-dropdown-container">
+                                <button type="button" onclick="toggleDropdown('q1_4_dropdown')" id="q1_4_btn" class="w-full bg-white border border-slate-300 rounded p-3 text-left flex justify-between items-center focus:ring-2 focus:ring-indigo-500 transition-colors">
+                                    <span id="q1_4_btn_text" class="text-slate-500 text-sm">Select expected growth...</span>
+                                    <span class="text-slate-400 text-xs">▼</span>
+                                </button>
+                                <input type="hidden" id="q1_4_val" value="">
+                                <div id="q1_4_dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border border-slate-300 rounded shadow-xl max-h-60 overflow-y-auto p-1 space-y-1 custom-dropdown-menu">
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_4', 'High', 'High Growth Potential')">High Growth Potential</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_4', 'Moderate', 'Moderate Growth Potential')">Moderate Growth Potential</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer border-b border-slate-100" onclick="selectSingle('q1_4', 'Limited', 'Limited/No Growth Potential')">Limited/No Growth Potential</div>
+                                    <div class="p-2 text-sm text-slate-700 hover:bg-slate-100 rounded cursor-pointer" onclick="selectSingle('q1_4', 'None', 'None / Unsure')">None / Unsure</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q1.5 Automation -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.5 Do you foresee opportunities for classifier or upstream automation to handle a portion of this work? *</label>
+                            <div id="q1_5_container" class="flex space-x-4 py-1 rounded border border-transparent transition-colors">
+                                <label class="flex items-center space-x-2"><input type="radio" name="q1_5" value="yes" onchange="toggleField('q1_5a_container', false); showError('q1_5_container', false)"> <span>Yes</span></label>
+                                <label class="flex items-center space-x-2"><input type="radio" name="q1_5" value="no" onchange="toggleField('q1_5a_container', true); showError('q1_5_container', false)"> <span>No</span></label>
+                                <label class="flex items-center space-x-2"><input type="radio" name="q1_5" value="unsure" onchange="toggleField('q1_5a_container', false); showError('q1_5_container', false)"> <span>Unsure</span></label>
+                            </div>
+                        </div>
+
+                        <!-- Q1.5a (Conditional) -->
+                        <div id="q1_5a_container" class="hidden pl-4 border-l-2 border-slate-300 fade-in mt-2">
+                            <div class="flex justify-between items-end mb-1">
+                                <label class="block text-sm font-semibold text-slate-700">1.5a Please provide the rationale for why automation will not be able to handle this: *</label>
+                                <button id="btn_polish_q1_5a" onclick="polishText('q1_5a')" type="button" class="text-xs text-indigo-700 hover:text-indigo-900 hover:bg-indigo-100 font-bold flex items-center bg-indigo-50 px-2 py-1 rounded transition">✨ Polish</button>
+                            </div>
+                            <textarea id="q1_5a" class="w-full p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" rows="2" oninput="showError('q1_5a', false)"></textarea>
+                        </div>
+
+                        <!-- Q1.6 FTEs -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.6 Do you foresee opportunities for FTEs to handle this work? *</label>
+                            <div id="q1_6_container" class="flex space-x-4 py-1 rounded border border-transparent transition-colors">
+                                <label class="flex items-center space-x-2"><input type="radio" name="q1_6" value="yes" onchange="toggleField('q1_6a_container', false); showError('q1_6_container', false)"> <span>Yes</span></label>
+                                <label class="flex items-center space-x-2"><input type="radio" name="q1_6" value="no" onchange="toggleField('q1_6a_container', true); showError('q1_6_container', false)"> <span>No</span></label>
+                                <label class="flex items-center space-x-2"><input type="radio" name="q1_6" value="unsure" onchange="toggleField('q1_6a_container', false); showError('q1_6_container', false)"> <span>Unsure</span></label>
+                            </div>
+                        </div>
+
+                        <!-- Q1.6a (Conditional) -->
+                        <div id="q1_6a_container" class="hidden pl-4 border-l-2 border-slate-300 fade-in mt-2">
+                            <div class="flex justify-between items-end mb-1">
+                                <label class="block text-sm font-semibold text-slate-700">1.6a Please provide the rationale for why FTEs may not be able to handle a portion of this work: *</label>
+                                <button id="btn_polish_q1_6a" onclick="polishText('q1_6a')" type="button" class="text-xs text-indigo-700 hover:text-indigo-900 hover:bg-indigo-100 font-bold flex items-center bg-indigo-50 px-2 py-1 rounded transition">✨ Polish</button>
+                            </div>
+                            <textarea id="q1_6a" class="w-full p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" rows="2" oninput="showError('q1_6a', false)"></textarea>
+                        </div>
+
+                        <!-- Q1.7 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">1.7 When does this change need to be fully operational? *</label>
+                            <input type="date" id="q1_7" class="w-full md:w-1/2 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" oninput="showError('q1_7', false)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: CHANGE REQUESTS -->
+                <div id="section-2" class="hidden p-8 fade-in">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">Change Requests</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Q2.0 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">2.0 What is the existing Launch ID this proposed change is tied to? *</label>
+                            <input type="text" id="q2_0" class="w-full p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" placeholder="e.g. L-123456" oninput="showError('q2_0', false)">
+                        </div>
+
+                        <!-- Q2.1 -->
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <label class="block text-sm font-semibold text-slate-700">2.1 Please provide additional details explaining the change and the rationale. *</label>
+                                <button id="btn_polish_q2_1" onclick="polishText('q2_1')" type="button" class="text-xs text-indigo-700 hover:text-indigo-900 hover:bg-indigo-100 font-bold flex items-center bg-indigo-50 px-2 py-1 rounded transition">✨ Polish</button>
+                            </div>
+                            <textarea id="q2_1" class="w-full p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" rows="3" oninput="showError('q2_1', false)"></textarea>
+                        </div>
+
+                        <!-- Q2.2 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">2.2 Does this change materially increase the regulatory, user safety, or operational risk of the existing workflow? *</label>
+                            <div id="q2_2_container" class="flex space-x-4 py-1 rounded border border-transparent transition-colors">
+                                <label class="flex items-center space-x-2"><input type="radio" name="q2_2" value="yes" onchange="showError('q2_2_container', false)"> <span class="font-medium text-slate-700">Yes</span></label>
+                                <label class="flex items-center space-x-2"><input type="radio" name="q2_2" value="no" onchange="showError('q2_2_container', false)"> <span>No</span></label>
+                            </div>
+                        </div>
+                        
+                        <!-- Q2.3 -->
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">2.3 When does this change need to be fully operational? *</label>
+                            <input type="date" id="q2_3" class="w-full md:w-1/2 p-3 border border-slate-300 rounded outline-none focus:ring-2 focus:ring-indigo-500 transition-colors" oninput="showError('q2_3', false)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Controls -->
+                <div class="bg-slate-50 px-8 py-4 border-t border-slate-200 flex justify-between rounded-b-xl">
+                    <button id="btn-back" class="hidden px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded shadow-sm hover:bg-slate-50 font-medium transition" onclick="navigateForm('back')">
+                        &#x2190; Back
+                    </button>
+                    <div class="ml-auto">
+                        <button id="btn-next" class="px-6 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 font-medium transition" onclick="validateAndNavigate('next')">
+                            Next Step &#x2192;
+                        </button>
+                        <button id="btn-submit" class="hidden px-6 py-2 bg-emerald-600 text-white rounded shadow hover:bg-emerald-700 font-medium transition" onclick="validateAndSubmit()">
+                            Submit Request &#x2714;&#xFE0F;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    // Form State
+    let currentStep = 0;
+    let routeDecision = null; // 'new' or 'change'
+
+    // Gemini API Configuration
+    const apiKey = "";
+    
+    async function callGeminiAPI(payload) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const delays = [1000, 2000, 4000, 8000, 16000];
+        
+        for (let i = 0; i < delays.length + 1; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                if (i === delays.length) {
+                    throw new Error("Failed after multiple retries");
+                }
+                await new Promise(resolve => setTimeout(resolve, delays[i]));
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // AI Feature: Polish Text
+    // ----------------------------------------------------
+    async function polishText(elementId) {
+        const el = document.getElementById(elementId);
+        const originalText = el.value.trim();
+        if (!originalText) {
+            showToast("Please enter some text before polishing.", true);
+            return;
+        }
+        
+        const btn = document.getElementById('btn_polish_' + elementId);
+        const originalBtnText = btn.innerHTML;
+        btn.innerHTML = `<span class="animate-spin mr-1">⏳</span> Polishing...`;
+        btn.disabled = true;
+        
+        const prompt = `Rewrite this text to be a highly professional, concise, and formal business justification for an intake form. Fix any grammar issues. Return ONLY the rewritten text, nothing else.\nText: "${originalText}"`;
+        
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }]
+        };
+        
+        try {
+            const result = await callGeminiAPI(payload);
+            el.value = result.trim();
+            showError(elementId, false);
+            showToast("✨ Text polished successfully!");
+        } catch (e) {
+            showToast("Failed to polish text. Please check your connection.", true);
+        } finally {
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        }
+    }
+
+    // ----------------------------------------------------
+    // AI Feature: Auto-fill Form
+    // ----------------------------------------------------
+    async function autoFillForm() {
+        const brief = document.getElementById('ai_brief').value.trim();
+        if(!brief) {
+            showToast("Please paste a project brief first.", true);
+            return;
+        }
+        
+        const btn = document.getElementById('btn_ai_autofill');
+        const loading = document.getElementById('ai_loading');
+        
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+        loading.classList.remove('hidden');
+        
+        const payload = {
+            contents: [{ parts: [{ text: "Analyze this brief and map it to the form fields.\nBrief: " + brief }] }],
+            generationConfig: { 
+                responseMimeType: "application/json", 
+                responseSchema: { 
+                    type: "OBJECT", 
+                    properties: {
+                        pa: { type: "STRING", description: "Search, YouTube, Cloud, Ads, Shopping, Payment, Child Safety, Play, or empty string" },
+                        type: { type: "STRING", description: "'new' or 'change'" },
+                        isUrgent: { type: "BOOLEAN", description: "true if there is a mandate, active risk, or deadline" },
+                        categoryId: { type: "ARRAY", items: { type: "STRING" }, description: "List containing 'cat1', 'cat2', 'cat3', 'cat4', and/or 'cat5' based on the primary challenge(s)" },
+                        rationale: { type: "STRING", description: "1-2 sentence professional summary of the challenge" }
+                    } 
+                } 
+            }
+        };
+        
+        try {
+            const jsonString = await callGeminiAPI(payload);
+            const data = JSON.parse(jsonString);
+            
+            // Map PA
+            if(data.pa) {
+                const validPAs = ['Search', 'YouTube', 'Cloud', 'Ads', 'Shopping', 'Payment', 'Child Safety', 'Play'];
+                const matchedPA = validPAs.find(p => p.toLowerCase() === data.pa.toLowerCase());
+                if(matchedPA) {
+                    selectSingle('q0_1', matchedPA, matchedPA);
+                }
+            }
+            
+            // Map Type
+            if(data.type === 'new' || data.type === 'change') {
+                const radio = document.querySelector(`input[name="q0_2"][value="${data.type}"]`);
+                if(radio) {
+                    radio.checked = true;
+                    handleRoutingChange();
+                }
+            }
+            
+            // Map Urgency
+            if(data.isUrgent) {
+                document.getElementById('q0_4_exec').checked = true;
+                updateUrgency();
+            }
+
+            // Map Category Array
+            if(data.categoryId && Array.isArray(data.categoryId) && routeDecision) {
+                data.categoryId.forEach(catId => {
+                    const cb = document.querySelector(`.q0_3a_checkbox[value="${catId}"]`);
+                    if(cb) cb.checked = true;
+                });
+                updateQ03aSelection();
+            } else if(data.categoryId && typeof data.categoryId === 'string' && routeDecision) {
+                const cb = document.querySelector(`.q0_3a_checkbox[value="${data.categoryId}"]`);
+                if(cb) {
+                    cb.checked = true;
+                    updateQ03aSelection();
+                }
+            }
+            
+            // Pre-fill Q0.3c with the generated rationale
+            if(data.rationale && routeDecision && document.getElementById('q0_3b_wrapper').classList.contains('hidden') === false) {
+                document.getElementById('q0_3_other_checkbox').checked = true;
+                updateQ03bSelection();
+                const rationaleBox = document.getElementById('q0_3c');
+                rationaleBox.value = data.rationale;
+                showError('q0_3c', false);
+            } else if (data.rationale) {
+                showToast("✨ Select Launch/Change request to fully populate rationale.", true);
+            }
+
+            showToast("✨ Form successfully auto-filled from your brief!");
+            
+        } catch(e) {
+            showToast("Failed to analyze the brief. Please fill manually.", true);
+        } finally {
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            loading.classList.add('hidden');
+        }
+    }
+
+
+    // DOM Elements
+    const sec0 = document.getElementById('section-0');
+    const sec1 = document.getElementById('section-1');
+    const sec2 = document.getElementById('section-2');
+    const btnNext = document.getElementById('btn-next');
+    const btnBack = document.getElementById('btn-back');
+    const btnSubmit = document.getElementById('btn-submit');
+    const stepIndicator = document.getElementById('step-indicator');
+    const stepCounter = document.getElementById('step-counter');
+
+    // ----------------------------------------------------
+    // UI Visual Helpers
+    // ----------------------------------------------------
+    function showToast(message, isError = false) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `p-4 mb-3 rounded-lg shadow-lg text-white font-medium transition-all duration-300 opacity-0 transform translate-y-2 ${isError ? 'bg-rose-600' : 'bg-emerald-600'}`;
+        toast.innerHTML = `<div class="flex items-center"><span class="mr-2">${isError ? '⚠️' : '✅'}</span> ${message}</div>`;
+        container.appendChild(toast);
+        
+        // Trigger fade in
+        requestAnimationFrame(() => {
+            toast.classList.remove('opacity-0', 'translate-y-2');
+        });
+        
+        // Remove after 4s
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    function showError(elementId, show) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        if (show) {
+            el.classList.add('border-rose-500', 'bg-rose-50');
+            el.classList.remove('border-slate-300', 'border-transparent');
+        } else {
+            el.classList.remove('border-rose-500', 'bg-rose-50');
+            if (elementId === 'q0_2_container' || elementId === 'q1_5_container' || elementId === 'q1_6_container' || elementId === 'q2_2_container') {
+                el.classList.add('border-transparent');
+            } else {
+                el.classList.add('border-slate-300');
+            }
+        }
+    }
+
+    function toggleField(containerId, isVisible) {
+        const el = document.getElementById(containerId);
+        if(isVisible) {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    }
+
+    // ----------------------------------------------------
+    // Dropdown Architecture
+    // ----------------------------------------------------
+    function toggleDropdown(id) {
+        // Close others
+        document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+            if (menu.id !== id) menu.classList.add('hidden');
+        });
+        document.getElementById(id).classList.toggle('hidden');
+    }
+
+    function selectSingle(baseId, value, text) {
+        document.getElementById(baseId + '_val').value = value;
+        document.getElementById(baseId + '_btn_text').innerText = text;
+        document.getElementById(baseId + '_btn_text').classList.remove('text-slate-500');
+        document.getElementById(baseId + '_btn_text').classList.add('text-slate-900', 'font-medium');
+        document.getElementById(baseId + '_dropdown').classList.add('hidden');
+        showError(baseId + '_btn', false);
+    }
+
+    function selectCategory(value, text) {
+        document.getElementById('q0_3a_val').value = value;
+        document.getElementById('q0_3a_btn_text').innerHTML = `<strong>${text.split('.')[0]}.</strong> ${text.split('.')[1]}`;
+        document.getElementById('q0_3a_btn_text').classList.remove('text-slate-500');
+        document.getElementById('q0_3a_btn_text').classList.add('text-slate-900', 'font-medium');
+        document.getElementById('q0_3a_dropdown').classList.add('hidden');
+        showError('q0_3a_btn', false);
+
+        // Show the specific statements dropdown container
+        document.getElementById('q0_3b_wrapper').classList.remove('hidden');
+        
+        // Reset sub-selections
+        document.querySelectorAll('.q0_3b_checkbox').forEach(cb => cb.checked = false);
+        
+        // Filter items
+        document.querySelectorAll('.q0_3b_item').forEach(item => {
+            if (item.dataset.cat === value && (item.dataset.show === 'both' || item.dataset.show === routeDecision)) {
+                item.classList.remove('hidden');
+                item.classList.add('flex');
+            } else {
+                item.classList.add('hidden');
+                item.classList.remove('flex');
+            }
+        });
+        
+        updateQ03bSelection();
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.custom-dropdown-container')) {
+            document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+    });
+
+    // ----------------------------------------------------
+    // Form specific updates
+    // ----------------------------------------------------
+    function handleRoutingChange() {
+        const selected = document.querySelector('input[name="q0_2"]:checked');
+        if (selected) {
+            routeDecision = selected.value;
+            showError('q0_2_container', false);
+            
+            // Enable Category dropdown
+            document.getElementById('q0_3a_wrapper').classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('q0_3a_overlay').classList.add('hidden');
+            document.getElementById('q0_3a_btn').classList.remove('bg-slate-50');
+            document.getElementById('q0_3a_btn').classList.add('bg-white');
+            
+            const checkedCats = document.querySelectorAll('.q0_3a_checkbox:checked');
+            if(checkedCats.length === 0) {
+                document.getElementById('q0_3a_btn_text').innerText = "Select problem categories...";
+                document.getElementById('q0_3a_btn_text').classList.remove('text-slate-900', 'font-medium');
+                document.getElementById('q0_3a_btn_text').classList.add('text-slate-500');
+            } else {
+                // Re-trigger selection to update the filtered list based on the new route
+                updateQ03aSelection();
+            }
+        }
+    }
+
+    function updateQ03aSelection() {
+        const checkboxes = document.querySelectorAll('.q0_3a_checkbox:checked');
+        const btnText = document.getElementById('q0_3a_btn_text');
+        const selectedCats = Array.from(checkboxes).map(cb => cb.value);
+        
+        if (checkboxes.length === 0) {
+            btnText.innerText = "Select problem categories...";
+            btnText.classList.remove('text-slate-900', 'font-medium');
+            btnText.classList.add('text-slate-500');
+            document.getElementById('q0_3b_wrapper').classList.add('hidden');
+        } else if (checkboxes.length === 1) {
+            btnText.innerText = "1 category selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            document.getElementById('q0_3b_wrapper').classList.remove('hidden');
+            showError('q0_3a_btn', false);
+        } else {
+            btnText.innerText = checkboxes.length + " categories selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            document.getElementById('q0_3b_wrapper').classList.remove('hidden');
+            showError('q0_3a_btn', false);
+        }
+
+        // Filter 0.3b items
+        document.querySelectorAll('.q0_3b_item').forEach(item => {
+            const itemCat = item.dataset.cat;
+            const itemShow = item.dataset.show;
+            
+            if (selectedCats.includes(itemCat) && (itemShow === 'both' || itemShow === routeDecision)) {
+                item.classList.remove('hidden');
+                item.classList.add('flex');
+            } else {
+                item.classList.add('hidden');
+                item.classList.remove('flex');
+                // Uncheck if hidden to prevent ghost selections passing validation
+                const cb = item.querySelector('.q0_3b_checkbox');
+                if (cb) cb.checked = false;
+            }
+        });
+
+        // Re-evaluate 0.3b button text and 0.3c visibility
+        updateQ03bSelection();
+    }
+
+    function updateQ03bSelection() {
+        // Only count currently visible checked boxes
+        const checkboxes = Array.from(document.querySelectorAll('.q0_3b_checkbox:checked')).filter(cb => {
+            return !cb.closest('.q0_3b_item').classList.contains('hidden');
+        });
+        const btnText = document.getElementById('q0_3b_btn_text');
+        
+        if (checkboxes.length === 0) {
+            btnText.innerText = "Select problem statements...";
+            btnText.classList.remove('text-slate-900', 'font-medium');
+            btnText.classList.add('text-slate-500');
+        } else if (checkboxes.length === 1) {
+            btnText.innerText = "1 problem statement selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            showError('q0_3b_btn', false);
+        } else {
+            btnText.innerText = checkboxes.length + " problem statements selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            showError('q0_3b_btn', false);
+        }
+
+        const otherCheckbox = document.getElementById('q0_3_other_checkbox');
+        // Check if other is both checked AND visible
+        const isOtherActive = otherCheckbox.checked && !otherCheckbox.closest('.q0_3b_item').classList.contains('hidden');
+        toggleField('q0_3c_container', isOtherActive);
+    }
+
+    function updateQ11Selection() {
+        const checkboxes = document.querySelectorAll('.q1_1_checkbox:checked');
+        const btnText = document.getElementById('q1_1_btn_text');
+        
+        if (checkboxes.length === 0) {
+            btnText.innerText = "Select risks...";
+            btnText.classList.remove('text-slate-900', 'font-medium');
+            btnText.classList.add('text-slate-500');
+        } else if (checkboxes.length === 1) {
+            btnText.innerText = "1 risk selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            showError('q1_1_btn', false);
+        } else {
+            btnText.innerText = checkboxes.length + " risks selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            showError('q1_1_btn', false);
+        }
+    }
+
+    function updateQ21Selection() {
+        const checkboxes = document.querySelectorAll('.q2_1_checkbox:checked');
+        const btnText = document.getElementById('q2_1_btn_text');
+        
+        if (checkboxes.length === 0) {
+            btnText.innerText = "Select specific changes...";
+            btnText.classList.remove('text-slate-900', 'font-medium');
+            btnText.classList.add('text-slate-500');
+            toggleField('q2_1a_container', false);
+        } else if (checkboxes.length === 1) {
+            btnText.innerText = "1 change selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            toggleField('q2_1a_container', true);
+            showError('q2_1_btn', false);
+        } else {
+            btnText.innerText = checkboxes.length + " changes selected";
+            btnText.classList.remove('text-slate-500');
+            btnText.classList.add('text-slate-900', 'font-medium');
+            toggleField('q2_1a_container', true);
+            showError('q2_1_btn', false);
+        }
+    }
+
+    function updateUrgency(isNone = false) {
+        const reg = document.getElementById('q0_4_reg');
+        const risk = document.getElementById('q0_4_risk');
+        const exec = document.getElementById('q0_4_exec');
+        const none = document.getElementById('q0_4_none');
+
+        if (isNone && none.checked) {
+            reg.checked = false; risk.checked = false; exec.checked = false;
+        } else if (reg.checked || risk.checked || exec.checked) {
+            none.checked = false;
+        }
+
+        const hasUrgency = reg.checked || risk.checked || exec.checked;
+        toggleField('q0_4a_container', hasUrgency);
+    }
+
+    // ----------------------------------------------------
+    // Validation & Routing
+    // ----------------------------------------------------
+    function validateSection(step) {
+        let isValid = true;
+        
+        if (step === 0) {
+            // 0.0
+            const email = document.getElementById('q0_0').value;
+            if (!email || !email.includes('@')) { isValid = false; showError('q0_0', true); }
+            // 0.1
+            if (!document.getElementById('q0_1_val').value) { isValid = false; showError('q0_1_btn', true); }
+            // 0.2
+            if (!document.querySelector('input[name="q0_2"]:checked')) { isValid = false; showError('q0_2_container', true); }
+            
+            // 0.3a & 0.3b
+            const selected03a = document.querySelectorAll('.q0_3a_checkbox:checked').length;
+            if (selected03a === 0 && routeDecision) { isValid = false; showError('q0_3a_btn', true); }
+            const selected03b = Array.from(document.querySelectorAll('.q0_3b_checkbox:checked')).filter(cb => !cb.closest('.q0_3b_item').classList.contains('hidden'));
+            if (selected03b.length === 0 && selected03a > 0) { isValid = false; showError('q0_3b_btn', true); }
+            
+            // 0.3c
+            const otherCheckbox = document.getElementById('q0_3_other_checkbox');
+            if (otherCheckbox.checked && !otherCheckbox.closest('.q0_3b_item').classList.contains('hidden') && !document.getElementById('q0_3c').value.trim()) { isValid = false; showError('q0_3c', true); }
+            
+            // 0.4
+            const reg = document.getElementById('q0_4_reg').checked;
+            const risk = document.getElementById('q0_4_risk').checked;
+            const exec = document.getElementById('q0_4_exec').checked;
+            const none = document.getElementById('q0_4_none').checked;
+            if (!reg && !risk && !exec && !none) { isValid = false; showError('q0_4_container', true); }
+            if ((reg || risk || exec) && !document.getElementById('q0_4a').value.trim()) { isValid = false; showError('q0_4a', true); }
+
+        } else if (step === 1 && routeDecision === 'new') {
+            // Section 1
+            if (!document.getElementById('q1_0_val').value) { isValid = false; showError('q1_0_btn', true); }
+            if (document.querySelectorAll('.q1_1_checkbox:checked').length === 0) { isValid = false; showError('q1_1_btn', true); }
+            if (!document.getElementById('q1_2_val').value) { isValid = false; showError('q1_2_btn', true); }
+            if (!document.getElementById('q1_3_val').value) { isValid = false; showError('q1_3_btn', true); }
+            if (!document.getElementById('q1_4_val').value) { isValid = false; showError('q1_4_btn', true); }
+            
+            const auto = document.querySelector('input[name="q1_5"]:checked');
+            if (!auto) { isValid = false; showError('q1_5_container', true); }
+            else if (auto.value === 'no' && !document.getElementById('q1_5a').value.trim()) { isValid = false; showError('q1_5a', true); }
+            
+            const fte = document.querySelector('input[name="q1_6"]:checked');
+            if (!fte) { isValid = false; showError('q1_6_container', true); }
+            else if (fte.value === 'no' && !document.getElementById('q1_6a').value.trim()) { isValid = false; showError('q1_6a', true); }
+
+            if (!document.getElementById('q1_7').value) { isValid = false; showError('q1_7', true); }
+
+        } else if (step === 1 && routeDecision === 'change') {
+            // Section 2
+            if (!document.getElementById('q2_0').value.trim()) { isValid = false; showError('q2_0', true); }
+            
+            // 2.1 is now just text
+            if (!document.getElementById('q2_1').value.trim()) { isValid = false; showError('q2_1', true); }
+
+            if (!document.querySelector('input[name="q2_2"]:checked')) { isValid = false; showError('q2_2_container', true); }
+            if (!document.getElementById('q2_3').value) { isValid = false; showError('q2_3', true); }
+        }
+
+        if(!isValid) {
+            showToast("Please fill out all mandatory fields highlighted in red.", true);
+        }
+        return isValid;
+    }
+
+    function validateAndNavigate(direction) {
+        if (direction === 'next') {
+            if (currentStep === 0) {
+                if (validateSection(0)) {
+                    sec0.classList.add('hidden');
+                    if (routeDecision === 'new') {
+                        sec1.classList.remove('hidden');
+                        stepIndicator.innerText = "Step 2: New Launch Details";
+                    } else {
+                        sec2.classList.remove('hidden');
+                        stepIndicator.innerText = "Step 2: Change Request Details";
+                    }
+                    
+                    btnNext.classList.add('hidden');
+                    btnSubmit.classList.remove('hidden');
+                    btnBack.classList.remove('hidden');
+                    currentStep = 1;
+                    stepCounter.innerText = "2 / 2";
+                    document.getElementById('step-indicator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+    }
+
+    function navigateForm(direction) {
+        if (direction === 'back') {
+            if (currentStep === 1) {
+                sec1.classList.add('hidden');
+                sec2.classList.add('hidden');
+                sec0.classList.remove('hidden');
+                
+                btnNext.classList.remove('hidden');
+                btnSubmit.classList.add('hidden');
+                btnBack.classList.add('hidden');
+                
+                stepIndicator.innerText = "Step 1: Intake Qualifiers";
+                currentStep = 0;
+                stepCounter.innerText = "1 / 2";
+                document.getElementById('step-indicator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }
+
+    function validateAndSubmit() {
+        if(validateSection(1)) {
+            showToast("Form submitted successfully! Triggering Needs Assessment workflow...");
+            setTimeout(() => { location.reload(); }, 2500);
+        }
+    }
+
+</script>
+</body>
+</html>
